@@ -1,0 +1,189 @@
+On load:
+	register new shaped recipe for golden apple named "&bGolden Head" using gold ingot, gold ingot, gold ingot, gold ingot, player head, gold ingot, gold ingot, gold ingot and gold ingot with id "elytra"
+	
+command /uhc:
+  permission: op
+  trigger:
+    set {hour} to 0
+    set {timer} to 0
+    set {minutes} to 0
+    set {episodie} to 0
+    set {episodietime} to 0
+	
+
+command /test:
+  trigger:
+    if {%player%.scoreboard} is false:
+      set {%player%.scoreboard} to true
+      send "lo habilitaste"
+    else:
+      set {%player%.scoreboard} to false
+      send "lo desabilitaste =v"
+	
+every 1 second in "world":
+    loop all players:
+        if {%loop-player%.scoreboard} is true:
+            set title of loop-player's scoreboard to "&6BUENOS DIAS"
+            set line 7 of loop-player's scoreboard to ""
+            set line 6 of loop-player's scoreboard to "&BUENOS DIAS"
+            set line 5 of loop-player's scoreboard to ""
+            set line 4 of loop-player's scoreboard to "&bBorde"
+            set line 3 of loop-player's scoreboard to "%{borde}%&rx%{borde}%"
+            set line 2 of loop-player's scoreboard to "&9Tiempo transcurrido"  
+            set line 1 of loop-player's scoreboard to "%{hour}%:%{minutes}%:%{timer}%"	
+	
+every 1 second:
+	add 1 to {timer}
+	if {timer} >= 60:
+		add 1 to {minutes}
+		set {timer} to 0
+		if {minutes} >= 60:
+			set {minutes} to 0
+			add 1 to {hour}
+
+every 1 second:
+	add 1 to {episodietime}
+	if {episodietime} >= 1200:
+		set {episodietime} to 0
+		add 1 to {episodie}
+		broadcast "Ha empezado el episodio &b%{episodie}%"
+		
+		
+command /animahola:
+  permission: op
+  trigger:
+    send "%{episodietime}% &7Esto es un comprobatorio de el episodio, cada que llegue a 1200 se deberia iniciar uno nuevo"			
+			
+every 1 second:
+    loop all players:
+        if {start} is true:
+            set title of loop-player's scoreboard to "&6UHC pene"
+            set line 7 of loop-player's scoreboard to ""
+            set line 6 of loop-player's scoreboard to "&aEpisodio &r%{_episodie}%"
+            set line 5 of loop-player's scoreboard to ""
+            set line 4 of loop-player's scoreboard to "&bBorde"
+            set line 3 of loop-player's scoreboard to "%{borde}%&rx%{borde}%"
+            set line 2 of loop-player's scoreboard to "&9Tiempo transcurrido"  
+            set line 1 of loop-player's scoreboard to "%{hour}%:%{minutes}%:%{timer}%"
+        else:
+            set title of loop-player's scoreboard to "&6UHC pene"
+            set line 4 of loop-player's scoreboard to ""
+            set line 3 of loop-player's scoreboard to "&aEsperando"
+            set line 2 of loop-player's scoreboard to ""
+            set line 1 of loop-player's scoreboard to "<##FFD600>Skript <##88FFEA>Dev: Anima"
+command /waiting:
+  permission: op
+  trigger:
+    set {start} to false
+    send "&7El UHC ha pasado a modo de espera"
+			
+command /dev:
+    description: hola
+    trigger:
+        set metadata tag "vanillaGUI" of player to chest inventory with 3 rows # named "&7Hello There"
+        set slot 0 of metadata tag "vanillaGUI" of player to stone named "&6General Kenobi"
+        set slot 1 of metadata tag "vanillaGUI" of player to player's skull named "zAnima_" with lore "&bSkript Dev"
+        open (metadata tag "vanillaGUI" of player) to player
+		
+			
+command /start:
+  permission: op
+  trigger:
+    disable PVP in all worlds
+    set {start} to true
+    set {minutes} to 0
+    set {timer} to 0
+    set {hour} to 0
+    set {borde} to 2500
+    set {episodie} to 1
+    broadcast "&6UHC &8&l> &7UHC Starting!"
+    execute console command "/effect give @a blindness 999999 5 true"
+    execute console command "/effect give @a slowness 999999 10 true"
+    execute console command "/effect give @a jump_boost 999999 128 true"
+    execute console command "/effect give @a mining_fatigue 999999 5 true"
+    execute console command "/effect give @a resistance 999999 10 true"
+    execute console command "/effect give @a invisibility 999999 0 true"
+    execute console command "/minecraft:time set 0"  
+    wait 10 seconds
+    execute console command "/spreadplayers 0 0 100 2000 true @a"
+    execute console command "/uhc"
+    execute console command "/effect clear @a"
+    execute console command "/effect give @a saturation 999999 255 true"
+    execute console command "/effect give @a resistance 999999 10 true"
+    execute console command "/effect give @a regeneration 999999 0 true"
+    execute console command "/scoreboard objectives add Health health"
+    execute console command "/scoreboard objectives setdisplay list Health"
+    execute console command "/scoreboard objectives setdisplay belowname Health"
+    execute console command "/gamerule announceAdvancements false"
+    execute console command "/gamerule doDaylightCycle true"
+    execute console command "/gamerule mobGriefing true"
+    execute console command "/gamerule doFireTick true"
+    execute console command "/gamerule naturalRegeneration false"
+    execute console command "/gamerule doImmediateRespawn true" 
+    wait 5 seconds
+    execute console command "/effect clear @a"
+    execute console command "/config"
+
+every 1 minute:
+	if {episodie} = 4:
+		if {pvp} is false:
+			broadcast "&6UHC &8&l> &cPvP ON"
+			enable PVP in all worlds
+	if {episodie} = 9:
+		if {borde} is false:
+			broadcast "&6UHC &8&l> &7El Borde empezara a cerrarse"
+			execute console command "/worldborder set 100 1200"
+			set {borde} to true
+			
+		
+command /config:
+  permission: op
+  trigger:
+    broadcast "&6UHC &8&l> &7UHC CONFIG"
+    wait 2 seconds
+    broadcast "&6UHC &8&l> &7Los episodios tendran una duracion de 20 minutos"
+    wait 2 seconds
+    broadcast "&6UHC &8&l> &7El &cPVP &7inicia en el &bcapitulo 4 &a[1:20H]"
+    wait 2 seconds
+    broadcast "&6UHC &8&l> &7El &cBorde &7inicia a moverse en el &bcapitulo 9 &a[2:40H]"
+
+command /pvp [<text>]:
+  permission: op
+  usage: <on/off>
+  trigger:
+    if arg-1 is "on":
+      broadcast "&6UHC &8&L> &7El PvP iniciado"
+      enable PVP in all worlds
+      set {pvp} to true
+      stop
+    else:
+      broadcast "&6UHC &8&L> &7El PvP se desabilito"
+      enable PVP in all worlds
+      set {pvp} to false
+	  
+command /broadcast <text>:
+  permission: op
+  trigger:
+    broadcast "&x&0&0&f&f&e&0&l[&x&1&a&d&f&e&0&lA&x&3&3&b&f&e&0&ln&x&4&d&9&f&d&f&lu&x&6&7&8&0&d&f&ln&x&8&0&6&0&d&f&lc&x&9&a&4&0&d&f&li&x&b&3&2&0&d&e&lo&x&c&d&0&0&d&e&l]&r %arg%"
+    play sound "block.bone_block.break" with volume 10 and pitch 0 to all players 
+
+on death:
+  victim is player
+  play sound "entity.guardian.death" with volume 10 and pitch 1 to all players
+	
+on eating of golden apple:
+    if item is golden apple item named "&bGolden Head":
+        apply absorption 2 to player for 120 seconds
+        apply instant health 2 to player for 1 seconds
+        remove regeneration from the player 
+	
+on death of player:
+    set block at location of victim to nether brick fence
+    set block at location 1 meter above location of victim to victim's skull	
+	
+on death of player:
+	set the player's gamemode to spectator
+	  
+	  
+
+			
